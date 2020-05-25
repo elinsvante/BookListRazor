@@ -1,0 +1,97 @@
+﻿@page
+@model BookListRazor.IndexModel
+
+<br />
+<!--Using Bootstrap-->
+<div class="container row p-0 m-0">
+    <div class="col-6">
+        <h2 class="text-info">Book List</h2>
+        <p>Book list application with CRUD operations using entity framework for integration with a database with asp.net core MVC.</p>
+    </div>
+    <div class="col-3">
+        <!--Tag helper. We do not need to mention that Create page will be inside BookList folder because it is located in the same folder as this Index file.-->
+        <a asp-page="Create" class="btn btn-info form-control text-white">Create New Book</a>
+    </div>
+    <div class="col-3">
+        <a asp-page="Upsert" class="btn btn-info form-control text-white">Add(Upsert) New Book</a>
+    </div>
+
+    <div class="col-12 border p-3 mt-3">
+        <form method="post">
+            @if (Model.Books.Count() > 0)
+            {
+                <table class=" table table-striped border">
+                    <tr class="table-secondary">
+                        <th>
+                            <!--Using tag-helper asp-for. FirstOrDefault because we want for only one record.
+                            This is instead of HTML Helper which would be HTML.DisplayNameFor(b => b.Books.FirstOrDefault().Author)-->
+                            <label asp-for="Books.FirstOrDefault().Name"></label>
+                        </th>
+                        <th>
+                            <label asp-for="Books.FirstOrDefault().Author"></label>
+                        </th>
+                        <th>
+                            <label asp-for="Books.FirstOrDefault().ISBN"></label>
+                        </th>
+                        <th></th>
+                    </tr>
+                    @foreach (var item in Model.Books)
+                    {
+                        <tr>
+                            <td>
+                                <!--Html Helper because there is no equivalent tag helper for "display for"-->
+                                @Html.DisplayFor(b => item.Name)
+
+                            </td>
+                            <td>
+                                <!--Html Helper because there is no equivalent tag helper for "display for"-->
+                                @Html.DisplayFor(b => item.Author)
+
+                            </td>
+                            <td>
+                                <!--Html Helper because there is no equivalent tag helper for "display for"-->
+                                @Html.DisplayFor(b => item.ISBN)
+
+                            </td>
+                            <td>
+                                <!--Custom tag helper other than OnGet and OnPost (Delete)-->
+                                <button asp-page-handler="Delete" asp-route-id="@item.Id" onClick="return confirm('Are you sure you want to delete?')" class="btn btn-danger btn-sm">Delete</button>
+                                <!--Tag helper Asp-route to pass Id -->
+                                <a asp-page="Edit" asp-route-id="@item.Id" class="btn btn-success btn-sm">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <p>No Books Available</p>
+            }
+        </form>
+    </div>
+
+    <div class="col-12" style="text-align:left">
+        <br />
+        <span class="h3 text-info">OR</span>
+        <br /><br />
+        <p>Datatables with API Calls in a Razor Project.</p>
+    </div>
+
+    <div class="col-12 border p-3">
+        <table id="DT_load" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Author</th>
+                    <th>ISBN</th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+<!--Load table DT_load using javascript and api-->
+@section Scripts {
+    <script src= "~/js/bookList.js"></script>
+}   
